@@ -1,0 +1,13 @@
+{
+  "name": "sorteio-copa-brasil",
+  "version": "1.0.0",
+  "description": "App de sorteio com tema Copa do Mundo Brasil",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sorteio SIPAT</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/tJ5LSSxP/krill-quadrada-(17).png" />
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/tJ5LSSxP/krill-quadrada-(17).png" />
+
+  <!-- Open Graph (compartilhamento) -->
+  <meta property="og:title" content="Sorteio SIPAT 2025" />
+  <meta property="og:description" content="26ª Semana Interna de Prevenção de Acidentes do Trabalho" />
+  <meta property="og:image" content="https://i.postimg.cc/tJ5LSSxP/krill-quadrada-(17).png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://i.postimg.cc/tJ5LSSxP/krill-quadrada-(17).png" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --verde:        #009c3b;
+      --verde2:       #007a2e;
+      --verde-soft:   rgba(0,156,59,0.1);
+      --verde-border: rgba(0,156,59,0.3);
+      --amarelo:      #FFDF00;
+      --amarelo2:     #c8a800;
+      --amarelo-soft: rgba(255,223,0,0.1);
+      --bg:           #030e05;
+      --text:         #ffffff;
+      --text2:        rgba(255,255,255,0.65);
+      --text3:        rgba(255,255,255,0.35);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; overflow:hidden; font-family:'Poppins',sans-serif; }
+
+    body {
+      background: #010a03;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Imagem de fundo ── */
+    .bg-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #010a03;
+    }
+    .bg-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 8, 2, 0.72);
+    }
+
+    #particles { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+    .particle  { position:absolute; border-radius:50%; animation:drift linear infinite; opacity:0; }
+    @keyframes drift {
+      0%   { transform:translateY(100vh) scale(0); opacity:0; }
+      8%   { opacity:.55; }
+      92%  { opacity:.3; }
+      100% { transform:translateY(-8vh) scale(1); opacity:0; }
+    }
+
+    #confetti { position:fixed; inset:0; pointer-events:none; z-index:999; overflow:hidden; }
+    .cf { position:absolute; top:-14px; animation:cfFall linear forwards; }
+    @keyframes cfFall { to { transform:translateY(110vh) rotate(880deg); opacity:0; } }
+
+    /* ── Hero ── */
+    .hero {
+      position:relative; z-index:1;
+      flex:1; min-height:0;
+      display:flex; flex-direction:column;
+      max-width:1280px; width:100%;
+      margin:0 auto;
+      padding:16px 24px 8px;
+    }
+
+    /* ── Coluna marca (logo + título) ── */
+    .col-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 28px 24px;
+      border-right: none;
+    }
+    .col-brand .logo-wrap { user-select:none; }
+    .col-brand .logo-wrap img {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      max-height: 38vh;
+      object-fit: contain;
+      display: block;
+      pointer-events:none; user-select:none; -webkit-user-drag:none;
+    }
+    .col-brand .sipat-title {
+      font-size: clamp(0.75rem, 1.1vw, 1rem);
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--amarelo);
+      text-align: center;
+      margin-top: -10px;
+    }
+
+    /* ── Cronograma ── */
+    .cronograma {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .crono-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,156,59,0.1);
+      border: 1px solid rgba(0,156,59,0.25);
+      border-radius: 10px;
+      padding: 7px 12px;
+    }
+    .crono-data {
+      flex-shrink: 0;
+      width: 72px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--amarelo);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    .crono-sep {
+      width: 1px;
+      height: 20px;
+      background: rgba(0,156,59,0.4);
+      flex-shrink: 0;
+    }
+    .crono-texto {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.3;
+    }
+
+    /* ── Painel ── */
+    .panel {
+      position:relative;
+      flex:1; min-height:0;
+      background: rgba(0, 10, 3, 0.58);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border:1.5px solid var(--verde-border);
+      border-radius:22px;
+      box-shadow:
+        0 0 40px rgba(0,156,59,0.12),
+        inset 0 0 0 1px rgba(255,223,0,0.06);
+      display:flex; flex-direction:column;
+      overflow:hidden;
+    }
+
+    .panel-grid {
+      flex:1; min-height:0;
+      display:grid;
+      grid-template-columns: 280px 1px 1fr 1px 1fr;
+    }
+
+    .col-divider {
+      background:linear-gradient(180deg,transparent,var(--verde-border),rgba(255,223,0,0.2),var(--verde-border),transparent);
+    }
+
+    .col-left  { display:flex; flex-direction:column; padding:22px 28px; }
+    .col-right { display:flex; flex-direction:column; padding:22px 28px; min-height:0; }
+
+    /* ── Label de seção ── */
+    .sec-label {
+      display:flex; align-items:center; gap:8px;
+      font-size:0.65rem; font-weight:700;
+      letter-spacing:0.2em; color:var(--verde);
+      text-transform:uppercase;
+      margin-bottom:12px; flex-shrink:0;
+    }
+
+    /* ── Inputs ── */
+    .range-row {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:12px; margin-bottom:12px; flex-shrink:0;
+    }
+    .input-group { display:flex; flex-direction:column; gap:5px; }
+    .input-group label {
+      font-size:0.7rem; font-weight:700;
+      letter-spacing:0.12em; color:rgba(255,223,0,0.75);
+      text-transform:uppercase;
+      display:flex; align-items:center; gap:6px;
+    }
+    .input-group input[type="number"] {
+      padding:10px 12px;
+      background:var(--verde-soft);
+      border:1.5px solid var(--verde-border);
+      border-radius:14px;
+      color:var(--amarelo);
+      font-family:'Poppins',sans-serif;
+      font-size:2rem; font-weight:800;
+      text-align:center; outline:none;
+      transition:border-color .2s, box-shadow .2s, background .2s;
+      width:100%; -moz-appearance:textfield;
+    }
+    .input-group input::-webkit-inner-spin-button,
+    .input-group input::-webkit-outer-spin-button { display:none; }
+    .input-group input:focus {
+      border-color:var(--verde);
+      box-shadow:0 0 0 3px rgba(0,156,59,0.2);
+      background:rgba(0,156,59,0.14);
+    }
+
+    /* ── Toggle ── */
+    .toggle-row {
+      display:flex; align-items:center; gap:12px;
+      margin-bottom:14px; cursor:pointer; flex-shrink:0;
+    }
+    #semRepeticao { display:none; }
+    .toggle-track {
+      width:44px; height:24px; border-radius:12px;
+      background:rgba(255,255,255,0.07);
+      border:1.5px solid var(--verde-border);
+      position:relative; flex-shrink:0;
+      transition:background .25s, border-color .25s;
+    }
+    .toggle-track::after {
+      content:''; position:absolute; left:3px; top:3px;
+      width:14px; height:14px; border-radius:50%;
+      background:rgba(0,156,59,0.4);
+      transition:transform .25s, background .25s;
+    }
+    #semRepeticao:checked ~ .toggle-track {
+      background:rgba(0,156,59,0.18); border-color:var(--verde);
+    }
+    #semRepeticao:checked ~ .toggle-track::after {
+      transform:translateX(20px); background:var(--verde);
+      box-shadow:0 0 8px rgba(0,156,59,0.6);
+    }
+    .toggle-label { font-size:0.88rem; font-weight:600; color:var(--text2); }
+
+    /* ── Botão sortear ── */
+    .btn-sortear {
+      width:100%; padding:15px 20px;
+      border:none; border-radius:16px;
+      background:linear-gradient(135deg, var(--amarelo) 0%, var(--amarelo2) 100%);
+      color:#0a1a04;
+      font-family:'Poppins',sans-serif;
+      font-size:1.12rem; font-weight:800;
+      letter-spacing:0.12em; text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:0 4px 20px rgba(255,223,0,0.35), 0 2px 6px rgba(0,0,0,0.3);
+      transition:transform .15s, box-shadow .15s, opacity .15s;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      position:relative; overflow:hidden; flex-shrink:0;
+    }
+    .btn-sortear::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);
+      transform:translateX(-100%); transition:transform .45s;
+    }
+    .btn-sortear:hover:not(:disabled)::after { transform:translateX(100%); }
+    .btn-sortear:hover:not(:disabled) {
+      transform:translateY(-2px);
+      box-shadow:0 8px 28px rgba(255,223,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .btn-sortear:active:not(:disabled) { transform:translateY(1px); }
+    .btn-sortear:disabled { opacity:.35; cursor:not-allowed; }
+
+    /* ── Aviso ── */
+    .aviso {
+      display:none; margin-top:10px; padding:9px 14px;
+      background:rgba(255,60,60,0.1);
+      border:1.5px solid rgba(255,100,100,0.3);
+      border-radius:12px;
+      font-size:0.78rem; font-weight:600; color:#ff9999;
+      flex-shrink:0;
+    }
+    .aviso.show { display:flex; align-items:center; gap:8px; animation:shake .35s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+    /* ── Botões ghost ── */
+    .ghost-row { display:flex; gap:10px; margin-top:auto; padding-top:14px; flex-shrink:0; }
+    .btn-ghost {
+      flex:1; padding:9px 12px; border-radius:12px;
+      border:1.5px solid rgba(0,156,59,0.25); background:transparent;
+      color:var(--text3);
+      font-family:'Poppins',sans-serif; font-size:0.78rem; font-weight:700;
+      letter-spacing:.05em; cursor:pointer;
+      transition:border-color .2s, color .2s, background .2s;
+      display:flex; align-items:center; justify-content:center; gap:7px;
+    }
+    .btn-ghost:hover { border-color:var(--verde); color:var(--verde); background:var(--verde-soft); }
+    .btn-ghost.danger:hover { border-color:rgba(255,80,80,.4); color:#ff8888; background:rgba(255,60,60,.06); }
+
+    /* ── Resultado ── */
+    .resultado-label {
+      font-size:0.62rem; font-weight:700;
+      letter-spacing:0.28em; color:var(--text3);
+      text-transform:uppercase; text-align:center;
+      flex-shrink:0; margin-bottom:2px;
+    }
+
+    .numero-display {
+      font-family:'Poppins',sans-serif;
+      font-weight:900;
+      font-size: clamp(5.5rem, 14vh, 10rem);
+      line-height:1;
+      color:var(--amarelo);
+      text-shadow:0 0 32px rgba(255,223,0,0.45), 0 0 64px rgba(255,223,0,0.15);
+      letter-spacing:0.04em;
+      display:flex; align-items:center; justify-content:center;
+      flex:0 0 auto; padding:4px 0;
+    }
+    .numero-display.rolling {
+      animation:rolling .09s linear infinite;
+      color:var(--verde);
+      text-shadow:0 0 32px rgba(0,156,59,0.6);
+    }
+    @keyframes rolling {
+      0%   { transform:scaleY(1.04) skewX(-1deg); }
+      50%  { transform:scaleY(0.96) skewX(1deg); }
+      100% { transform:scaleY(1.04) skewX(-1deg); }
+    }
+    .numero-display.reveal { animation:reveal .45s cubic-bezier(.175,.885,.32,1.275) forwards; }
+    @keyframes reveal {
+      0%   { transform:scale(0.2); opacity:0; filter:blur(10px); }
+      70%  { transform:scale(1.06); opacity:1; filter:blur(0); }
+      100% { transform:scale(1); }
+    }
+
+    .celebracao {
+      font-size:0.8rem; font-weight:800;
+      letter-spacing:0.2em; color:var(--verde);
+      text-transform:uppercase; text-align:center;
+      min-height:22px; flex-shrink:0;
+      animation:glowPulse 1.3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { opacity:1; text-shadow:0 0 8px rgba(0,156,59,0.4); }
+      50%      { opacity:.7; text-shadow:0 0 18px rgba(0,156,59,0.8); }
+    }
+
+    /* ── Progresso ── */
+    .progresso-wrap { flex-shrink:0; margin-top:10px; display:none; }
+    .progresso-row  {
+      display:flex; justify-content:space-between;
+      font-size:0.65rem; font-weight:600; color:var(--text3); margin-bottom:5px;
+    }
+    .barra-container { height:5px; background:rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; }
+    .barra-fill {
+      height:100%;
+      background:linear-gradient(90deg, var(--verde2), var(--amarelo));
+      border-radius:10px; transition:width .5s ease;
+      box-shadow:0 0 8px rgba(0,156,59,0.5);
+    }
+
+    .sep-h {
+      height:1px; flex-shrink:0; margin:12px 0;
+      background:linear-gradient(90deg,transparent,var(--verde-border),rgba(255,223,0,0.2),var(--verde-border),transparent);
+    }
+
+    /* ── Histórico ── */
+    .hist-header { display:flex; align-items:center; justify-content:space-between; flex-shrink:0; margin-bottom:10px; }
+    .hist-count  { font-size:0.68rem; font-weight:700; color:var(--verde); letter-spacing:.1em; }
+
+    .historico-vazio {
+      font-size:0.82rem; color:var(--text3); text-align:center;
+      padding:14px 0; letter-spacing:.04em;
+    }
+
+    .historico-grid {
+      flex:1; min-height:0; overflow-y:auto;
+      display:flex; flex-wrap:wrap; align-content:flex-start; gap:7px;
+    }
+    .historico-grid::-webkit-scrollbar { width:4px; }
+    .historico-grid::-webkit-scrollbar-track { background:transparent; }
+    .historico-grid::-webkit-scrollbar-thumb { background:rgba(0,156,59,0.3); border-radius:4px; }
+
+    .hist-item {
+      padding:5px 14px;
+      background:var(--verde-soft);
+      border:1.5px solid var(--verde-border);
+      border-radius:10px;
+      font-family:'Poppins',sans-serif;
+      font-size:1rem; font-weight:800;
+      color:var(--verde); letter-spacing:.05em;
+      animation:popIn .28s cubic-bezier(.175,.885,.32,1.275);
+    }
+    @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* ── Rodapé ── */
+    .rodape {
+      flex-shrink:0;
+      text-align:center;
+      padding:6px 0 4px;
+    }
+    .rodape img {
+      height:52px;
+      width:auto;
+      opacity:0.65;
+      pointer-events:none; user-select:none; -webkit-user-drag:none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Imagem de fundo com overlay escurecido -->
+<div class="bg-wrap">
+  <img
+    src="https://i.postimg.cc/KjYL6jHw/Chat-GPT-Image-29-de-abr-de-2026-13-48-54.png"
+    alt=""
+    draggable="false"
+    oncontextmenu="return false"
+  />
+  <div class="bg-overlay"></div>
+</div>
+
+<div id="particles"></div>
+<div id="confetti"></div>
+
+<div class="hero">
+
+  <!-- Painel -->
+  <div class="panel">
+    <div class="panel-grid">
+
+      <!-- Coluna marca: logo + título -->
+      <div class="col-brand">
+        <div class="logo-wrap">
+          <img
+            src="https://i.postimg.cc/tJ5LSSxP/krill-quadrada-(17).png"
+            alt="Logo SIPAT"
+            draggable="false"
+            oncontextmenu="return false"
+          />
+        </div>
+        <div class="sipat-title">
+          26ª Semana Interna de Prevenção de Acidentes do Trabalho
+        </div>
+
+        <div class="cronograma">
+          <div class="crono-item">
+            <div class="crono-data">Seg · 11/05</div>
+            <div class="crono-sep"></div>
+            <div class="crono-texto">Danilo Bueno</div>
+          </div>
+          <div class="crono-item">
+            <div class="crono-data">Ter · 12/05</div>
+            <div class="crono-sep"></div>
+            <div class="crono-texto">Unimed</div>
+          </div>
+          <div class="crono-item">
+            <div class="crono-data">Qua · 13/05</div>
+            <div class="crono-sep"></div>
+            <div class="crono-texto">Osmar Garrafa</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-divider"></div>
+
+      <!-- Esquerda: configuração -->
+      <div class="col-left">
+
+        <div class="sec-label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+            <circle cx="8" cy="6" r="2.5" fill="currentColor" stroke="none"/>
+            <circle cx="16" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+            <circle cx="10" cy="18" r="2.5" fill="currentColor" stroke="none"/>
+          </svg>
+          Configurar Intervalo
+        </div>
+
+        <div class="range-row">
+          <div class="input-group">
+            <label>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+              Número Inicial
+            </label>
+            <input type="number" id="numInicio" value="1" min="0" max="99999" />
+          </div>
+          <div class="input-group">
+            <label>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="3 3 21 12 3 21 3 3"/></svg>
+              Número Final
+            </label>
+            <input type="number" id="numFim" value="100" min="0" max="99999" />
+          </div>
+        </div>
+
+        <label class="toggle-row">
+          <input type="checkbox" id="semRepeticao" checked />
+          <span class="toggle-track"></span>
+          <span class="toggle-label">Não repetir números já sorteados</span>
+        </label>
+
+        <button class="btn-sortear" id="btnSortear" onclick="sortear()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+            <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+            <line x1="4" y1="4" x2="9" y2="9"/>
+          </svg>
+          Sortear Agora
+        </button>
+
+        <div class="aviso" id="aviso">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="avisoText"></span>
+        </div>
+
+        <div class="ghost-row">
+          <button class="btn-ghost" onclick="resetarSorteio()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
+            Recomeçar
+          </button>
+          <button class="btn-ghost danger" onclick="limparHistorico()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            Limpar Histórico
+          </button>
+        </div>
+
+      </div>
+
+      <div class="col-divider"></div>
+
+      <!-- Direita: resultado + histórico -->
+      <div class="col-right">
+
+        <div class="sec-label" style="justify-content:center">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/>
+            <path d="M6 9a6 6 0 0 0 12 0V3H6v6z"/><line x1="12" y1="15" x2="12" y2="19"/>
+            <rect x="8" y="19" width="8" height="2" rx="1"/>
+          </svg>
+          Número Sorteado
+        </div>
+
+        <div class="resultado-label" id="resultadoLabel">AGUARDANDO SORTEIO</div>
+        <div class="numero-display" id="numeroDisplay">—</div>
+        <div class="celebracao" id="celebracao"></div>
+
+        <div class="progresso-wrap" id="progressoWrap">
+          <div class="progresso-row">
+            <span id="progressoInfo"></span>
+            <span id="progressoPct"></span>
+          </div>
+          <div class="barra-container">
+            <div class="barra-fill" id="barraFill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="sep-h"></div>
+
+        <div class="hist-header">
+          <div class="sec-label" style="margin-bottom:0">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+              <circle cx="3" cy="6"  r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="3" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="3" cy="18" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+            Já Sorteados
+          </div>
+          <span class="hist-count" id="histCount">0 números</span>
+        </div>
+
+        <div id="historicoVazio" class="historico-vazio">Nenhum número sorteado ainda.</div>
+        <div class="historico-grid" id="historicoGrid"></div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+
+<script>
+  let historico = [];
+  let sorteando = false;
+
+  const frases = [
+    "GOOOOL","PARABÉNS","INCRÍVEL","VAAAAAAI",
+    "QUE SORTEIO","SORTE TOTAL","SENSACIONAL","É ISSO AÍ",
+  ];
+
+  (function() {
+    const c = document.getElementById('particles');
+    const cores = ['#009c3b','#FFDF00','#007a2e','#c8a800','#00c44a'];
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const sz = Math.random() * 4 + 2;
+      p.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${cores[Math.floor(Math.random()*cores.length)]};animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*10}s;`;
+      c.appendChild(p);
+    }
+  })();
+
+  function dispararConfetti() {
+    const c = document.getElementById('confetti');
+    const cores = ['#FFDF00','#009c3b','#002776','#ffffff','#c8a800','#00e85a'];
+    for (let i = 0; i < 110; i++) {
+      const p = document.createElement('div');
+      p.className = 'cf';
+      const sz = Math.random() * 9 + 4;
+      p.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz*(Math.random()*1.5+0.4)}px;background:${cores[Math.floor(Math.random()*cores.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${Math.random()*1.6+1}s;animation-delay:${Math.random()*0.7}s;opacity:.9;`;
+      c.appendChild(p);
+      p.addEventListener('animationend', () => p.remove());
+    }
+  }
+
+  function validar() {
+    const inicio = parseInt(document.getElementById('numInicio').value);
+    const fim    = parseInt(document.getElementById('numFim').value);
+    if (isNaN(inicio)||isNaN(fim))  { mostrarAviso('Preencha os dois campos com números válidos.'); return null; }
+    if (inicio>fim)                  { mostrarAviso('O número inicial deve ser menor ou igual ao final.'); return null; }
+    if (fim-inicio>99999)            { mostrarAviso('Intervalo muito grande. Máximo 100.000 números.'); return null; }
+    esconderAviso(); return { inicio, fim };
+  }
+
+  function mostrarAviso(msg) {
+    const el = document.getElementById('aviso');
+    document.getElementById('avisoText').textContent = msg;
+    el.classList.remove('show'); void el.offsetWidth;
+    el.classList.add('show'); el.style.display='';
+  }
+  function esconderAviso() {
+    const el = document.getElementById('aviso');
+    el.classList.remove('show'); el.style.display='none';
+  }
+
+  function animar(numeroFinal, inicio, fim, cb) {
+    const d = document.getElementById('numeroDisplay');
+    d.classList.add('rolling'); d.classList.remove('reveal');
+    document.getElementById('resultadoLabel').textContent='SORTEANDO...';
+    let n=0;
+    const id = setInterval(()=>{
+      d.textContent = Math.floor(Math.random()*(fim-inicio+1))+inicio;
+      if(++n>=24){
+        clearInterval(id);
+        d.classList.remove('rolling');
+        d.textContent=numeroFinal;
+        d.classList.add('reveal');
+        cb();
+      }
+    },55);
+  }
+
+  function atualizarProgresso() {
+    const inicio=parseInt(document.getElementById('numInicio').value);
+    const fim=parseInt(document.getElementById('numFim').value);
+    const semRep=document.getElementById('semRepeticao').checked;
+    const wrap=document.getElementById('progressoWrap');
+    if(!semRep||isNaN(inicio)||isNaN(fim)){wrap.style.display='none';return;}
+    const total=fim-inicio+1,sorteados=historico.length,restantes=total-sorteados,pct=Math.round((sorteados/total)*100);
+    wrap.style.display='block';
+    document.getElementById('progressoInfo').textContent=`${sorteados} sorteados · ${restantes} restantes`;
+    document.getElementById('progressoPct').textContent=pct+'%';
+    document.getElementById('barraFill').style.width=pct+'%';
+  }
+
+  function atualizarContador() {
+    document.getElementById('histCount').textContent=historico.length===1?'1 número':`${historico.length} números`;
+  }
+
+  function sortear() {
+    if(sorteando) return;
+    const params=validar(); if(!params) return;
+    const {inicio,fim}=params;
+    const semRep=document.getElementById('semRepeticao').checked;
+    let pool=[];
+    for(let n=inicio;n<=fim;n++) pool.push(n);
+    if(semRep) pool=pool.filter(n=>!historico.includes(n));
+    if(pool.length===0){mostrarAviso('Todos os números já foram sorteados. Clique em Recomeçar.');return;}
+    sorteando=true;
+    document.getElementById('btnSortear').disabled=true;
+    document.getElementById('celebracao').textContent='';
+    const numero=pool[Math.floor(Math.random()*pool.length)];
+    animar(numero,inicio,fim,()=>{
+      if(semRep) historico.push(numero);
+      document.getElementById('resultadoLabel').textContent='NÚMERO SORTEADO';
+      document.getElementById('celebracao').textContent=frases[Math.floor(Math.random()*frases.length)];
+      dispararConfetti();
+      adicionarHistoricoItem(numero);
+      atualizarProgresso();
+      atualizarContador();
+      const total=fim-inicio+1;
+      if(semRep&&historico.length>=total){
+        document.getElementById('celebracao').textContent='TODOS OS NÚMEROS SORTEADOS';
+        document.getElementById('btnSortear').disabled=true;
+        sorteando=false;
+      } else {
+        setTimeout(()=>{document.getElementById('btnSortear').disabled=false;sorteando=false;},500);
+      }
+    });
+  }
+
+  function adicionarHistoricoItem(numero) {
+    document.getElementById('historicoVazio').style.display='none';
+    const item=document.createElement('div');
+    item.className='hist-item'; item.textContent=numero;
+    document.getElementById('historicoGrid').prepend(item);
+  }
+
+  function resetarSorteio() {
+    historico=[];
+    const d=document.getElementById('numeroDisplay');
+    d.textContent='—'; d.classList.remove('rolling','reveal');
+    document.getElementById('celebracao').textContent='';
+    document.getElementById('resultadoLabel').textContent='AGUARDANDO SORTEIO';
+    document.getElementById('historicoGrid').innerHTML='';
+    document.getElementById('historicoVazio').style.display='block';
+    document.getElementById('progressoWrap').style.display='none';
+    document.getElementById('histCount').textContent='0 números';
+    esconderAviso();
+    document.getElementById('btnSortear').disabled=false;
+    sorteando=false;
+  }
+
+  function limparHistorico() {
+    historico=[];
+    document.getElementById('historicoGrid').innerHTML='';
+    document.getElementById('historicoVazio').style.display='block';
+    document.getElementById('progressoWrap').style.display='none';
+    document.getElementById('histCount').textContent='0 números';
+    document.getElementById('btnSortear').disabled=false;
+    sorteando=false;
+  }
+
+  ['numInicio','numFim'].forEach(id=>
+    document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')sortear();})
+  );
+</script>
+</body>
+</html>
